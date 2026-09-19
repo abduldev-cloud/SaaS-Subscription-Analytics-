@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCENELED
+  EXPIRED
+  PAST_DUE
+  INCOMPLETE
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  subscriptions Subscription[]
+  payments      Payment[]
+  invoices      Invoice[]
+}
+
+model Subscription {
+  id                   Int                @id @default(autoincrement())
+  userId               Int
+  stripeCustomerId     String?
+  stripeSubscriptionId String             @unique
+  plan                 String
+  status               SubscriptionStatus
+  startDate            DateTime
+  endDate              DateTime
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id])
+  payments Payment[]
+  invoices Invoice[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([endDate])
+}
+
+model Payment {
+  id              Int           @id @default(autoincrement())
+  userId          Int
+  subscriptionId  Int
+  stripePaymentId String        @unique
+  amount          Int
+  currency        String
+  status          PaymentStatus
+  paidAt          DateTime?
+  createdAt       DateTime      @default(now())
+
+  user         User         @relation(fields: [userId], references: [id])
+  subscription Subscription @relation(fields: [subscriptionId], references: [id])
+
+  @@index([userId])
+  @@index([subscriptionId])
+}
+
+model Invoice {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  subscriptionId Int
+  invoiceNumber  String   @unique
+  amount         Int
+  currency       String
+  filePath       String
+  createdAt      DateTime @default(now())
+
+  user         User         @relation(fields: [userId], references: [id])
+  subscription Subscription @relation(fields: [subscriptionId], references: [id])
+
+  @@index([userId])
+  @@index([subscriptionId])
+}
+
+model WebhookEvent {
+  id            Int      @id @default(autoincrement())
+  stripeEventId String   @unique
+  eventType     String
+  processedAt   DateTime @default(now())
+}
