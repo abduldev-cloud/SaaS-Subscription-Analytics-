@@ -116,7 +116,7 @@ Renewal Worker
    ▼
 Mailtrap
 
-
+```
 
 Prerequisites
 
