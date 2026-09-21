@@ -16,7 +16,7 @@ datasource db {
 
 enum SubscriptionStatus {
   ACTIVE
-  CANCENELED
+  CANCELED
   EXPIRED
   PAST_DUE
   INCOMPLETE

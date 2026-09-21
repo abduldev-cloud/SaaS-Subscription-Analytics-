@@ -188,7 +188,7 @@ exports.Prisma.NullsOrder = {
 };
 exports.SubscriptionStatus = exports.$Enums.SubscriptionStatus = {
   ACTIVE: 'ACTIVE',
-  CANCENELED: 'CANCENELED',
+  CANCELED: 'CANCELED',
   EXPIRED: 'EXPIRED',
   PAST_DUE: 'PAST_DUE',
   INCOMPLETE: 'INCOMPLETE'

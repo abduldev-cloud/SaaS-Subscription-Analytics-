@@ -45,7 +45,7 @@ export type WebhookEvent = $Result.DefaultSelection<Prisma.$WebhookEventPayload>
 export namespace $Enums {
   export const SubscriptionStatus: {
   ACTIVE: 'ACTIVE',
-  CANCENELED: 'CANCENELED',
+  CANCELED: 'CANCELED',
   EXPIRED: 'EXPIRED',
   PAST_DUE: 'PAST_DUE',
   INCOMPLETE: 'INCOMPLETE'
